@@ -26,9 +26,7 @@ export default () => {
         <Stack.Screen
           name="Details"
           component={DetailsScreen}
-          options={{
-            title: 'Ulica',
-          }}
+          options={({ route }) => ({ title: 'Ulica: ' + route.params.name })}
         />
       </Stack.Navigator>
     </NavigationContainer>
