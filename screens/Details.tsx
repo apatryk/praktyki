@@ -1,14 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, div } from 'react-native';
+import { StyleSheet } from 'react-native';
 import * as dayjs from 'dayjs';
-import Airtable from 'airtable';
-import { LogBox } from 'react-native'
-import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 import { ActivityIndicator, Colors } from 'react-native-paper';
-import { View, Card, CardProps, Button, Text} from 'react-native-ui-lib';
-import { Col, Row, Grid } from 'react-native-easy-grid';
-import { DatePicker, Form, Picker } from 'native-base';
+import { View, Text } from 'react-native-ui-lib';
+import { Col, Grid } from 'react-native-easy-grid';
 var parse = require('date-fns/parse')
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime)
@@ -96,8 +91,8 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
         return (
             <View flex-1>
                 <Grid style={styles.gridzik}>
-                    <Col style={styles.kafelek}><Text style={styles.text}>Śmieci segregowane</Text><Text style={styles.text}>{items.find(x => x.name === name).segregowane.split(',').[0]+ ' dni'}</Text></Col>
-                    <Col style={styles.kafelek}><Text style={styles.text}>Śmieci mieszane</Text><Text style={styles.text}>{items.find(x => x.name === name).mieszane.split(',').[0]+ ' dni'}</Text></Col>
+                    <Col style={styles.kafelek}><Text style={styles.text}>Śmieci segregowane</Text><Text style={styles.text}>{items.find(x => x.name === name).segregowane.split(',').[0] + ' dni'}</Text></Col>
+                    <Col style={styles.kafelek}><Text style={styles.text}>Śmieci mieszane</Text><Text style={styles.text}>{items.find(x => x.name === name).mieszane.split(',').[0] + ' dni'}</Text></Col>
                 </Grid>
             </View>
         );
@@ -106,8 +101,8 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
 const styles = StyleSheet.create({
     text: {
         color: "#000000",
-        fontWeight:"bold",
-        fontSize:18
+        fontWeight: "bold",
+        fontSize: 18
     },
     kafelek: {
         flex: 1,
