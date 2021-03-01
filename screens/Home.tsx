@@ -15,48 +15,39 @@ type Category = {
 
 const Item = ({ item }: ListRenderItemInfo<Category>, navigation: StackNavigationProp<StackParamList, 'Home'>) => (
     <View>
-        <Text onPress={() => {
+        <Text style={styles.text} onPress={() => {
             navigation.navigate('Details', { name: item.name });
         }}>{item.name}</Text>
     </View>
 )
 
 export const HomeScreen: FC<HomeScreenProps> = ({ navigation }) => {
-
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
-
-    // Note: the empty deps array [] means
-    // this useEffect will run once
-    // similar to componentDidMount()
+    function compare( a, b ) {
+        if ( a.name < b.name ){
+          return -1;
+        }
+        if ( a.name > b.name ){
+          return 1;
+        }
+        return 0;
+      }
     useEffect(() => {
-        var Airtable = require('airtable');
-        var base = new Airtable({ apiKey: '--------------' }).base('appFD2g0OEjhkrviY');
-        base('Piotrowice').select({
-            // Selecting the first 3 records in Grid view:
-
-            view: "Grid view"
-        }).eachPage(function page(records: Array<any>, fetchNextPage) {
-            setItems(records.map(record => { return record.fields }));
-            records.forEach(function (record) {
-                var ajdi = record.id
-                base('Piotrowice').find(ajdi, function (err, record) {
-                    if (err) { console.error(err); return; }
-                });
-            });
-            // To fetch the next page of records, call `fetchNextPage`.
-            // If there are more records, `page` will get called again.
-            // If there are no more records, `done` will get called.
-            fetchNextPage()
-
+        fetch("https://api.airtable.com/v0/appFD2g0OEjhkrviY/Piotrowice?api_key=keywAgs0R5LO4CpjY")
+      .then(res => res.json())
+      .then(
+        (result) => {
+            var hwdp = result.records.map(item => item.fields);
+            setIsLoaded(true);
+            setItems(hwdp.sort(compare));
         },
-            function done(err) {
-                if (err) { console.error(err); return; }
-                setIsLoaded(true);
-                setItems(arr);
-            }
-            );
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )        
     }, [])
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -74,3 +65,10 @@ export const HomeScreen: FC<HomeScreenProps> = ({ navigation }) => {
         );
     }
 }
+const styles = StyleSheet.create({
+    text: {
+        color: "#000000",
+        fontWeight:"bold",
+        fontSize:18
+    }
+})
