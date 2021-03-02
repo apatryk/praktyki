@@ -36,9 +36,9 @@ export const HomeScreen: FC<HomeScreenProps> = ({ navigation }) => {
             .then(res => res.json())
             .then(
                 (result) => {
-                    var hwdp = result.records.map(item => item.fields);
+                    var airtable_result = result.records.map(item => item.fields);
                     setIsLoaded(true);
-                    setItems(hwdp.sort(compare));
+                    setItems(airtable_result.sort(compare));
                 },
                 (error) => {
                     setIsLoaded(true);

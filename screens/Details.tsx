@@ -22,17 +22,17 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
             .then(res => res.json())
             .then(
                 (result) => {
-                    var rzecz = result.records.map(record => { return record.fields });
-                    var wywoz_mieszane = rzecz.map(item => item.mieszane.split(','));
-                    var wywoz_segregowane = rzecz.map(item => item.segregowane.split(','));
-                    for (var i = 0; i < rzecz.length; i++) {
-                        var arr_mieszane = wywoz_mieszane[i]
+                    var airtable_result = result.records.map(record => { return record.fields });
+                    var mixed_rubbish = airtable_result.map(item => item.mieszane.split(','));
+                    var segregated_rubbish = airtable_result.map(item => item.segregowane.split(','));
+                    for (var i = 0; i < airtable_result.length; i++) {
+                        var arr_mixed = mixed_rubbish[i]
                         var arr_m = [];
-                        for (var o = 0; o < wywoz_mieszane[o].length; o++) {
-                            if (rzecz[i].name == name) {
+                        for (var o = 0; o < mixed_rubbish[o].length; o++) {
+                            if (airtable_result[i].name == name) {
                                 var today = startOfToday();
                                 var date1 = parse(
-                                    arr_mieszane[o],
+                                    arr_mixed[o],
                                     'MM/dd/yyyy',
                                     new Date()
                                 )
@@ -45,13 +45,15 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
                             }
                             arr_m.sort(compareNumbers);
                         }
-                        rzecz[i]["mieszane"] = arr_m.join([',']);
-                        var arr_segregowane = wywoz_segregowane[i]
+                        airtable_result[i]["mieszane"] = arr_m.join([',']);
+                        var arr_segregated = segregated_rubbish[i]
                         var arr_s = [];
-                        for (var o = 0; o < wywoz_segregowane[o].length; o++) {
-                            if (rzecz[i].name == name) {
+                        for (var o = 0; o < segregated_rubbish[o].length; o++) {
+                            if (airtable_result[i].name == name) {
+                                // var date1 = dayjs(arr_segregated[o])
+                                // var roznica = date1.diff(dayjs(), 'days');
                                 var date1 = parse(
-                                    arr_segregowane[o],
+                                    arr_segregated[o],
                                     'MM/dd/yyyy',
                                     new Date()
                                 )
@@ -65,10 +67,10 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
                             }
                             arr_s.sort(compareNumbers);
                         }
-                        rzecz[i]["segregowane"] = arr_s.join([',']);
+                        airtable_result[i]["segregowane"] = arr_s.join([',']);
                     }
 
-                    setItems(rzecz)
+                    setItems(airtable_result)
                     setIsLoaded(true);
                 },
                 (error) => {
