@@ -23,13 +23,7 @@ export const HomeScreen: FC<HomeScreenProps> = ({ navigation }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
     function compare(a, b) {
-        if (a.name < b.name) {
-            return -1;
-        }
-        if (a.name > b.name) {
-            return 1;
-        }
-        return 0;
+      return a.name.localeCompare(b.name);
     }
     useEffect(() => {
         fetch("https://api.airtable.com/v0/appFD2g0OEjhkrviY/Piotrowice?api_key=keywAgs0R5LO4CpjY")
