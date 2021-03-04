@@ -9,7 +9,6 @@ type Category = {
     readonly id: string,
     readonly name: string,
 }
-
 const Item = ({ item }: ListRenderItemInfo<Category>, navigation: StackNavigationProp<StackParamList, 'Home'>) => (
     <View>
         <Text style={styles.text} onPress={() => {
@@ -17,13 +16,12 @@ const Item = ({ item }: ListRenderItemInfo<Category>, navigation: StackNavigatio
         }}>{item.name}</Text>
     </View>
 )
-
 export const HomeScreen: FC<HomeScreenProps> = ({ navigation }) => {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
     function compare(a, b) {
-      return a.name.localeCompare(b.name);
+        return a.name.localeCompare(b.name);
     }
     useEffect(() => {
         fetch(apiUrl.URL)

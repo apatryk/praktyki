@@ -12,21 +12,21 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
-    function dateDiff(a, b){
+    function dateDiff(a, b) {
         var dateParse = parse(
             a,
             'MM/dd/yyyy',
             new Date());
-            var dateDifference = differenceInDays(
-                dateParse,
-                startOfToday());
-                if (dateDifference > 0) {
-                    b.push(dateDifference);
-                }
+        var dateDifference = differenceInDays(
+            dateParse,
+            startOfToday());
+        if (dateDifference > 0) {
+            b.push(dateDifference);
+        }
     };
-    function sortDateArray(a){
+    function sortDateArray(a) {
         a.sort(
-            function(a, b) {
+            function (a, b) {
                 return a - b
             }
         );
@@ -39,10 +39,10 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
                     const airtableResult = result.records.map(record => { return record.fields });
                     const mixed_rubbish = airtableResult.map(item => item.mixed.split(','));
                     const segregated_rubbish = airtableResult.map(item => item.segregated.split(','));
-                    airtableResult.map(function(item, resultLength){
+                    airtableResult.map(function (item, resultLength) {
                         const arr_mixed = mixed_rubbish[resultLength]
                         let arr_m = [];
-                        mixed_rubbish.map(function(item, categoryLength){
+                        mixed_rubbish.map(function (item, categoryLength) {
                             if (airtableResult[resultLength].name == name) {
                                 dateDiff(arr_mixed[categoryLength], arr_m);
                             }
@@ -51,7 +51,7 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
                         airtableResult[resultLength]["mixed"] = arr_m.join([',']);
                         const arr_segregated = segregated_rubbish[resultLength]
                         let arr_s = [];
-                        segregated_rubbish.map(function(item, categoryLength){
+                        segregated_rubbish.map(function (item, categoryLength) {
                             if (airtableResult[resultLength].name == name) {
                                 dateDiff(arr_segregated[categoryLength], arr_s);
                             }
@@ -67,8 +67,6 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
                     setError(error);
                 }
             )
-
-
     }, [])
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -78,11 +76,11 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
         return (
             <View flex-1>
                 <Grid style={styles.grid}>
-                    <Col style={styles.gridelement}>
+                    <Col style={styles.gridElement}>
                         <Text style={styles.text}>Śmieci segregowane</Text>
                         <Text style={styles.text}>{items.find(x => x.name === name).segregated.split(',').[0] + ' dni'}</Text>
                     </Col>
-                    <Col style={styles.gridelement}>
+                    <Col style={styles.gridElement}>
                         <Text style={styles.text}>Śmieci mieszane</Text>
                         <Text style={styles.text}>{items.find(x => x.name === name).mixed.split(',').[0] + ' dni'}</Text>
                     </Col>
@@ -97,7 +95,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 18
     },
-    gridelement: {
+    gridElement: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
