@@ -28,7 +28,7 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
     // similar to componentDidMount()
     // useEffect(() => {
         var Airtable = require('airtable');
-        var base = new Airtable({ apiKey: 'keywAgs0R5LO4CpjY' }).base('appFD2g0OEjhkrviY');
+        var base = new Airtable({ apiKey: '' }).base('appFD2g0OEjhkrviY');
         // base('Piotrowice').select({
         //     // Selecting the first 3 records in Grid view:
 
