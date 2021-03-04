@@ -6,6 +6,7 @@ import { Col, Grid } from 'react-native-easy-grid';
 import parse from 'date-fns/parse';
 import differenceInDays from 'date-fns/differenceInDays';
 import startOfToday from 'date-fns/startOfToday';
+import { apiUrl } from '../Api';
 export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => {
     const { name } = route.params;
     const [error, setError] = useState(null);
@@ -31,7 +32,7 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
         );
     };
     useEffect(() => {
-        fetch("https://api.airtable.com/v0/appFD2g0OEjhkrviY/Piotrowice?api_key=keywAgs0R5LO4CpjY")
+        fetch(apiUrl.URL)
             .then(res => res.json())
             .then(
                 (result) => {

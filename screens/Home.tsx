@@ -2,8 +2,8 @@ import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import React, { FC, useEffect, useState } from 'react';
 import { FlatList, ListRenderItemInfo, Text, View } from 'react-native';
 import { StackParamList } from '../App';
+import { apiUrl } from '../Api';
 import { ActivityIndicator, StyleSheet } from 'react-native';
-
 type HomeScreenProps = StackScreenProps<StackParamList, 'Home'>
 type Category = {
     readonly id: string,
@@ -26,7 +26,7 @@ export const HomeScreen: FC<HomeScreenProps> = ({ navigation }) => {
       return a.name.localeCompare(b.name);
     }
     useEffect(() => {
-        fetch("https://api.airtable.com/v0/appFD2g0OEjhkrviY/Piotrowice?api_key=keywAgs0R5LO4CpjY")
+        fetch(apiUrl.URL)
             .then(res => res.json())
             .then(
                 (result) => {
