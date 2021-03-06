@@ -13,16 +13,18 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
     function dateDiff(a, b) {
-        var dateParse = parse(
-            a,
-            'MM/dd/yyyy',
-            new Date());
-        var dateDifference = differenceInDays(
-            dateParse,
-            startOfToday());
-        if (dateDifference > 0) {
-            b.push(dateDifference);
-        }
+        a.map(function(item){
+            const dateParse = parse(
+                item,
+                'MM/dd/yyyy',
+                new Date());
+            const dateDifference = differenceInDays(
+                dateParse,
+                startOfToday());
+            if (dateDifference > 0) {
+                b.push(dateDifference);
+            }
+        })
     };
     function sortDateArray(a) {
         a.sort(
@@ -37,29 +39,17 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
             .then(
                 (result) => {
                     const airtableResult = result.records.map(record => { return record.fields });
-                    const mixed_rubbish = airtableResult.map(item => item.mixed.split(','));
-                    const segregated_rubbish = airtableResult.map(item => item.segregated.split(','));
-                    airtableResult.map(function (item, resultLength) {
-                        const arr_mixed = mixed_rubbish[resultLength]
-                        let arr_m = [];
-                        mixed_rubbish.map(function (item, categoryLength) {
-                            if (airtableResult[resultLength].name == name) {
-                                dateDiff(arr_mixed[categoryLength], arr_m);
-                            }
-                            sortDateArray(arr_m);
-                        });
-                        airtableResult[resultLength]["mixed"] = arr_m.join([',']);
-                        const arr_segregated = segregated_rubbish[resultLength]
-                        let arr_s = [];
-                        segregated_rubbish.map(function (item, categoryLength) {
-                            if (airtableResult[resultLength].name == name) {
-                                dateDiff(arr_segregated[categoryLength], arr_s);
-                            }
-                            sortDateArray(arr_s);
-                        });
-                        airtableResult[resultLength]["segregated"] = arr_s.join([',']);
-                    });
-                    setItems(airtableResult)
+                    const resultForName = airtableResult.filter(result => result.name === name)
+                    const mixedResult = resultForName[0].mixed.split(',');
+                    const segregatedResult = resultForName[0].segregated.split(',');
+                    let [arrS, arrM] = [[],[]];
+                    dateDiff(mixedResult, arrM)
+                    sortDateArray(arrM);
+                    resultForName[0].["mixed"] = arrM;
+                    dateDiff(segregatedResult, arrS)
+                    sortDateArray(arrS);
+                    resultForName[0].["segregated"] = arrS;
+                    setItems(resultForName[0])
                     setIsLoaded(true);
                 },
                 (error) => {
@@ -78,11 +68,11 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
                 <Grid style={styles.grid}>
                     <Col style={styles.gridElement}>
                         <Text style={styles.text}>Śmieci segregowane</Text>
-                        <Text style={styles.text}>{items.find(x => x.name === name).segregated.split(',').[0] + ' dni'}</Text>
+                        <Text style={styles.text}>{items.segregated[0]} Dni</Text>
                     </Col>
                     <Col style={styles.gridElement}>
                         <Text style={styles.text}>Śmieci mieszane</Text>
-                        <Text style={styles.text}>{items.find(x => x.name === name).mixed.split(',').[0] + ' dni'}</Text>
+                        <Text style={styles.text}>{items.mixed[0]} Dni</Text>
                     </Col>
                 </Grid>
             </View>

@@ -28,9 +28,9 @@ export const HomeScreen: FC<HomeScreenProps> = ({ navigation }) => {
             .then(res => res.json())
             .then(
                 (result) => {
-                    var airtable_result = result.records.map(item => item.fields);
+                    const airtableResult = result.records.map(item => item.fields);
                     setIsLoaded(true);
-                    setItems(airtable_result.sort(compare));
+                    setItems(airtableResult.sort(compare));
                 },
                 (error) => {
                     setIsLoaded(true);
