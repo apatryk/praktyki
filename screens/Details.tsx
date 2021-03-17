@@ -12,27 +12,23 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
-    function dateDiff(a, b) {
-        a.map(function(item){
+    const dateDiff = (arrResult, targetArr) => {
+        arrResult.map(function(item){
             const dateParse = parse(
                 item,
-                'MM/dd/yyyy',
+                'dd/MM/yyyy',
                 new Date());
             const dateDifference = differenceInDays(
                 dateParse,
                 startOfToday());
             if (dateDifference > 0) {
-                b.push(dateDifference);
+                targetArr.push(dateDifference);
             }
         })
     };
-    function sortDateArray(a) {
-        a.sort(
-            function (a, b) {
-                return a - b
-            }
-        );
-    };
+        function sort1 (a, b) {
+                return a - b;
+        }
     useEffect(() => {
         fetch(apiUrl.URL)
             .then(res => res.json())
@@ -43,13 +39,13 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
                     const mixedResult = resultForName[0].mixed.split(',');
                     const segregatedResult = resultForName[0].segregated.split(',');
                     let [arrS, arrM] = [[],[]];
+                    let mergedDateDiff = {}
                     dateDiff(mixedResult, arrM)
-                    sortDateArray(arrM);
-                    resultForName[0].["mixed"] = arrM;
                     dateDiff(segregatedResult, arrS)
-                    sortDateArray(arrS);
-                    resultForName[0].["segregated"] = arrS;
-                    setItems(resultForName[0])
+                    mergedDateDiff.['mixed'] = arrM.sort(sort1);
+                    mergedDateDiff.['segregated'] = arrS.sort(sort1);
+                    console.log(arrM, arrS)
+                    setItems(mergedDateDiff)
                     setIsLoaded(true);
                 },
                 (error) => {
