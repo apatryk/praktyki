@@ -86,7 +86,6 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
 const styles = StyleSheet.create({
     viewContainer:{
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
     },
     text: {
