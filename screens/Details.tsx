@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image, Dimensions } from 'react-native';
 import { ActivityIndicator, Colors } from 'react-native-paper';
 import { View, Text } from 'react-native-ui-lib';
 import { Col, Grid } from 'react-native-easy-grid';
 import parse from 'date-fns/parse';
 import differenceInDays from 'date-fns/differenceInDays';
 import startOfToday from 'date-fns/startOfToday';
-import { apiUrl } from '../Api';
+
 export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => {
-    const { name } = route.params;
+    const { data } = route.params;
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [items, setItems] = useState([]);
     function dateDiff(a, b) {
-        a.map(function(item){
+        a.map(function (item) {
             const dateParse = parse(
                 item,
-                'MM/dd/yyyy',
+                'dd/MM/yyyy',
                 new Date());
             const dateDifference = differenceInDays(
                 dateParse,
@@ -34,29 +34,20 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
         );
     };
     useEffect(() => {
-        fetch(apiUrl.URL)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    const airtableResult = result.records.map(record => { return record.fields });
-                    const resultForName = airtableResult.filter(result => result.name === name)
-                    const mixedResult = resultForName[0].mixed.split(',');
-                    const segregatedResult = resultForName[0].segregated.split(',');
-                    let [arrS, arrM] = [[],[]];
-                    dateDiff(mixedResult, arrM)
-                    sortDateArray(arrM);
-                    resultForName[0].["mixed"] = arrM;
-                    dateDiff(segregatedResult, arrS)
-                    sortDateArray(arrS);
-                    resultForName[0].["segregated"] = arrS;
-                    setItems(resultForName[0])
-                    setIsLoaded(true);
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            )
+        if (typeof data.mixed === 'string') {
+            const mixedResult = data.mixed.split(',');
+            const segregatedResult = data.segregated.split(',');
+            let [arrS, arrM] = [[], []];
+            dateDiff(mixedResult, arrM)
+            data.["mixedDays"] = arrM;
+            dateDiff(segregatedResult, arrS)
+            data.["segregatedDays"] = arrS;
+            setItems(data)
+            setIsLoaded(true);
+        } else {
+            setItems(data)
+            setIsLoaded(true);
+        }
     }, [])
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -64,36 +55,83 @@ export const DetailsScreen: FC<DetailsScreenProps> = ({ route, navigation }) => 
         return <View flex-1><Grid style={styles.grid}><ActivityIndicator animating={true} color={Colors.red800} /></Grid></View>;
     } else {
         return (
-            <View flex-1>
+            <View style={styles.viewContainer}>
                 <Grid style={styles.grid}>
                     <Col style={styles.gridElement}>
+                        <View style={styles.iconCircle}>
+                            <Image
+                                style={styles.segLogo}
+                                source={require('../assets/segregatedGarbage.png')}
+                            />
+                        </View>
                         <Text style={styles.text}>Śmieci segregowane</Text>
-                        <Text style={styles.text}>{items.segregated[0]} Dni</Text>
+                        <Text style={styles.textDays}>{items.segregatedDays[0]} Dni</Text>
                     </Col>
                     <Col style={styles.gridElement}>
+                    <View style={styles.iconCircle}>
+                            <Image
+                                style={styles.mixLogo}
+                                source={require('../assets/garbageBin.png')}
+                            />
+                        </View>
                         <Text style={styles.text}>Śmieci mieszane</Text>
-                        <Text style={styles.text}>{items.mixed[0]} Dni</Text>
+                        <Text style={styles.textDays}>{items.mixedDays[0]} Dni</Text>
                     </Col>
                 </Grid>
             </View>
         );
+
     }
 }
 const styles = StyleSheet.create({
+    viewContainer:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     text: {
         color: "#000000",
         fontWeight: "bold",
-        fontSize: 18
+        fontSize: 25,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    },
+    textDays: {
+        color: "#000000",
+        fontWeight: "bold",
+        fontSize: 35,
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     gridElement: {
-        flex: 1,
-        alignItems: 'center',
+        backgroundColor: '#48cae4',
+        borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
+        width: Dimensions.get('window').width * 0.75,
+        height: Dimensions.get('window').width * 0.75,
         justifyContent: 'center',
-        height: 200,
     },
     grid: {
         flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+    },
+    mixLogo: {
+        width: 60,
+        height: 60,
+    },
+    segLogo: {
+        width: 80,
+        height: 80,
+    },
+    iconCircle: {
         alignItems: 'center',
         justifyContent: 'center',
+        width: 80,
+        height: 80,
+        borderRadius: 50 + 50 / 2,
+        right: 0,
+        backgroundColor: '#0096c7',
+        position: 'absolute',
+        top: 0,
     }
 });

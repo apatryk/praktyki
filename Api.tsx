@@ -1,3 +1,4 @@
 export const apiUrl = {
-    URL: 'https://api.airtable.com/v0/appFD2g0OEjhkrviY/Piotrowice?api_key=-------------'
+    key: '?api_key=keywAgs0R5LO4CpjY'
   };
+  
