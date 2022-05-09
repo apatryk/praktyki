@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "praktyki-projekt",
-    "slug": "praktyki-projekt",
+    "name": "Kalendarz Odpadów",
+    "slug": "Kalendarz-Odpadow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
